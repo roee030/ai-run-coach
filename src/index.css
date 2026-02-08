@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens – always applied (works even if Tailwind config is not loaded) */
+:root {
+  --app-bg: #06090C;
+  --app-surface: #0F1419;
+  --app-elevated: #161D26;
+  --app-brand: #1ED760;
+  --app-brand-secondary: #3B82F6;
+  --app-danger: #EF4444;
+  --app-text: #FFFFFF;
+  --app-text-secondary: #D1D5DB;
+  --app-text-muted: #9CA3AF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+
+/* App backgrounds and surfaces – use these so colors always show */
+.app-bg { background-color: var(--app-bg); }
+.app-surface { background-color: var(--app-surface); }
+.app-elevated { background-color: var(--app-elevated); }
+.app-brand { background-color: var(--app-brand); }
+.app-danger { background-color: var(--app-danger); }
+
+.app-text { color: var(--app-text); }
+.app-text-secondary { color: var(--app-text-secondary); }
+.app-text-muted { color: var(--app-text-muted); }
+
+/* Typography – large numbers so they’re never “default small” */
+.app-timer { font-size: 80px; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.app-distance { font-size: 48px; line-height: 1.05; font-weight: 700; font-variant-numeric: tabular-nums; }
+.app-metric { font-size: 36px; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.app-hero { font-size: 44px; line-height: 1.05; font-weight: 700; }
+.app-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.app-subtitle { font-size: 17px; line-height: 1.4; font-weight: 400; }
+
+@media (min-width: 640px) {
+  .app-timer { font-size: 96px; }
+  .app-distance { font-size: 56px; }
+  .app-metric { font-size: 40px; }
+  .app-hero { font-size: 56px; }
+}
+
+/* Card and button shadows */
+.app-shadow-card { box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 1px 0 0 rgba(255,255,255,0.06); }
+.app-shadow-button { box-shadow: 0 12px 40px -8px rgba(30, 215, 96, 0.5), 0 0 0 2px rgba(255,255,255,0.12); }
+.app-shadow-stop { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.25), 0 16px 48px -12px rgba(0,0,0,0.5); }
+.app-shadow-bar { box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35); }
+
+.app-brand-blur { background-color: rgba(30, 215, 96, 0.12); }
+.app-gradient-bottom { background: linear-gradient(to top, var(--app-surface), transparent); }
+.app-brand-pill { background-color: rgba(30, 215, 96, 0.15); border: 1px solid rgba(30, 215, 96, 0.3); }
+.app-brand-text { color: var(--app-brand); }
+.app-danger-bg { background-color: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); }
+.app-danger-text { color: var(--app-danger); }
+
+/* Safe area padding for notched devices */
+.safe-bottom {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
