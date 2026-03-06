@@ -1,101 +1,222 @@
 /**
- * RunControls component - Large interactive start/stop/reset buttons
+ * RunControls — three-state run lifecycle:
+ *   !isRunning          → START button
+ *   isRunning + !paused → PAUSE button
+ *   paused              → RESUME (neon) + STOP (red) → Finish confirmation modal
  */
 
-import { motion } from "framer-motion";
-import { Button, Card, CardBody, Alert } from "@nextui-org/react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface RunControlsProps {
   isRunning: boolean;
+  isPaused: boolean;
   error: string | null;
   onStart: () => void;
+  onPause: () => void;
+  onResume: () => void;
   onStop: () => void;
-  onReset: () => void;
 }
 
 export function RunControls({
   isRunning,
-  error,
+  isPaused,
   onStart,
+  onPause,
+  onResume,
   onStop,
-  onReset,
 }: RunControlsProps) {
+  const [showFinish, setShowFinish] = useState(false);
+
   return (
-    <motion.div
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="px-4 py-6 w-full max-w-md mx-auto"
-    >
-      {/* Error Display */}
-      {error && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-4"
-        >
-          <Alert
-            color="danger"
-            title="Error"
-            description={error}
-            className="bg-red-500/10"
+    <>
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="flex gap-4 items-center justify-center w-full"
+      >
+        {/* Not started → START */}
+        {!isRunning && !isPaused && (
+          <Btn
+            onClick={onStart}
+            size={120}
+            label="▶"
+            sublabel="Start"
+            variant="brand"
           />
-        </motion.div>
-      )}
+        )}
 
-      {/* Controls - Large Buttons */}
-      <div className="flex gap-3 items-center justify-center">
-        {!isRunning ? (
-          <motion.div className="w-full flex justify-center">
-            <Button
-              onClick={onStart}
-              size="lg"
-              className="brand-circle brand-btn h-28 w-28 sm:h-32 sm:w-32 text-2xl font-black"
-              aria-label="Start run"
-            >
-              ▶
-            </Button>
-          </motion.div>
-        ) : (
+        {/* Running → PAUSE */}
+        {isRunning && !isPaused && (
+          <Btn
+            onClick={onPause}
+            size={100}
+            label="⏸"
+            sublabel="Pause"
+            variant="brand"
+          />
+        )}
+
+        {/* Paused → RESUME + STOP */}
+        {isPaused && (
           <>
-            <motion.div className="flex gap-4 items-center">
-              <Button
-                onClick={onStop}
-                size="lg"
-                className="brand-circle h-20 w-20 text-lg font-black"
-                aria-label="Pause run"
-              >
-                ⏸
-              </Button>
-
-              <Button
-                onClick={onReset}
-                size="lg"
-                className="brand-circle bg-red-600 text-white h-20 w-20 text-lg font-black"
-                aria-label="Stop run"
-              >
-                ■
-              </Button>
-            </motion.div>
+            <Btn
+              onClick={onResume}
+              size={100}
+              label="▶"
+              sublabel="Resume"
+              variant="brand"
+            />
+            <Btn
+              onClick={() => setShowFinish(true)}
+              size={80}
+              label="■"
+              sublabel="Stop"
+              variant="danger"
+            />
           </>
         )}
-      </div>
-
-      {/* Safety Tips */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="mt-6 text-center"
-      >
-        <Card className="bg-neutral-900 border border-neutral-800">
-          <CardBody className="p-3">
-            <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">
-              Keep screen on • Grant location access
-            </p>
-          </CardBody>
-        </Card>
       </motion.div>
-    </motion.div>
+
+      {/* ── Finish Run? confirmation modal ── */}
+      <AnimatePresence>
+        {showFinish && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-6"
+            style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)" }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="glass-card p-8 w-full max-w-sm flex flex-col items-center gap-6 text-center"
+            >
+              <div>
+                <h2
+                  className="brand-title text-3xl"
+                  style={{ color: "var(--text-bold)" }}
+                >
+                  Finish Run?
+                </h2>
+                <p className="text-sm mt-2" style={{ color: "var(--text-muted)" }}>
+                  Your run will be saved and summarised.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 w-full">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowFinish(false);
+                    onStop();
+                  }}
+                  style={{
+                    padding: "0.9rem",
+                    borderRadius: "9999px",
+                    background: "var(--brand-primary)",
+                    color: "var(--brand-fg)",
+                    fontWeight: 900,
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "'Oswald', Inter, system-ui, sans-serif",
+                  }}
+                >
+                  Yes, Finish
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowFinish(false)}
+                  style={{
+                    padding: "0.9rem",
+                    borderRadius: "9999px",
+                    background: "transparent",
+                    color: "var(--text-secondary)",
+                    fontWeight: 700,
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    border: "2px solid var(--border-mid)",
+                    cursor: "pointer",
+                  }}
+                >
+                  Keep Going
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+/* ---- Circular action button ---- */
+function Btn({
+  onClick,
+  size,
+  label,
+  sublabel,
+  variant,
+}: {
+  onClick: () => void;
+  size: number;
+  label: string;
+  sublabel: string;
+  variant: "brand" | "danger";
+}) {
+  const isBrand = variant === "brand";
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={sublabel}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          background: isBrand ? "var(--brand-primary)" : "rgba(239,68,68,0.15)",
+          color: isBrand ? "var(--brand-fg)" : "var(--danger)",
+          border: isBrand ? "none" : "2px solid var(--danger)",
+          boxShadow: isBrand
+            ? "0 0 40px var(--brand-glow)"
+            : "0 0 24px var(--danger-glow)",
+          fontSize: size >= 100 ? "1.8rem" : "1.3rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+          fontFamily: "'Oswald', Inter, system-ui, sans-serif",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.08)";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+        }}
+        onMouseDown={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.95)";
+        }}
+        onMouseUp={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.08)";
+        }}
+      >
+        {label}
+      </button>
+      <span
+        className="text-xs font-bold uppercase tracking-widest"
+        style={{ color: isBrand ? "var(--brand-primary)" : "var(--danger)" }}
+      >
+        {sublabel}
+      </span>
+    </div>
   );
 }

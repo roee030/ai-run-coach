@@ -3,11 +3,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { NextUIProvider } from "@nextui-org/react";
 import { HomeScreen } from "./components/HomeScreen";
 import { RunTracker } from "./components/RunTracker";
+import { RunSummary } from "./components/RunSummary";
 import CoachDebugPanel from "./components/CoachDebugPanel";
 import { OnboardingScreen } from "./components/OnboardingScreen";
 import "./index.css";
 
-type Screen = "onboarding" | "home" | "running";
+type Screen = "onboarding" | "home" | "running" | "summary";
+
+export interface RunSummaryData {
+  distance: number;
+  elapsedTime: number;
+  pace: number;
+}
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => {
@@ -18,6 +25,13 @@ function App() {
       return "onboarding";
     }
   });
+
+  const [runSummary, setRunSummary] = useState<RunSummaryData | null>(null);
+
+  const handleRunFinish = (data: RunSummaryData) => {
+    setRunSummary(data);
+    setCurrentScreen("summary");
+  };
 
   return (
     <NextUIProvider>
@@ -46,7 +60,7 @@ function App() {
               >
                 <HomeScreen onStartRun={() => setCurrentScreen("running")} />
               </motion.div>
-            ) : (
+            ) : currentScreen === "running" ? (
               <motion.div
                 key="running"
                 initial={{ opacity: 0 }}
@@ -55,7 +69,27 @@ function App() {
                 transition={{ duration: 0.5 }}
                 className="flex-1"
               >
-                <RunTracker onBack={() => setCurrentScreen("home")} />
+                <RunTracker
+                  autoStart
+                  onBack={() => setCurrentScreen("home")}
+                  onFinish={handleRunFinish}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="summary"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex-1"
+              >
+                <RunSummary
+                  distance={runSummary?.distance ?? 0}
+                  elapsedTime={runSummary?.elapsedTime ?? 0}
+                  pace={runSummary?.pace ?? 0}
+                  onHome={() => setCurrentScreen("home")}
+                />
               </motion.div>
             )}
           </AnimatePresence>

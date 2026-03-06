@@ -2,19 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design tokens – always applied (works even if Tailwind config is not loaded) */
-:root {
-  --app-bg: #000000;
-  --app-surface: #121212;
-  --app-elevated: #181818;
-  --app-brand: #d4ff00; /* primary neon lime */
-  --app-brand-secondary: #3b82f6;
-  --app-danger: #ef4444;
-  --app-text: #ffffff;
-  --app-text-secondary: #d1d5db;
-  --app-text-muted: #9ca3af;
+/* ============================================================
+   DESIGN SYSTEM — Single Source of Truth
+   To retheme the entire app, change --brand-primary here only.
+   ============================================================ */
+
+/* --- Dark theme (default) ---------------------------------- */
+:root,
+[data-theme="dark"] {
+  /* Brand — swap this one variable to retheme the whole app */
+  --brand-primary:  #D4FF00;                    /* Volt (Nike-style) */
+  --brand-fg:       #000000;                    /* text/icons on brand bg */
+  --brand-glow:     rgba(212, 255, 0, 0.35);
+
+  /* Backgrounds */
+  --bg-base:        #000000;
+  --bg-surface:     #121212;
+  --bg-elevated:    #1a1a1a;
+
+  /* Text */
+  --text-bold:      #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted:     rgba(255, 255, 255, 0.4);
+
+  /* Borders */
+  --border-subtle:  rgba(255, 255, 255, 0.08);
+  --border-mid:     rgba(255, 255, 255, 0.15);
+
+  /* Danger */
+  --danger:         #EF4444;
+  --danger-glow:    rgba(239, 68, 68, 0.35);
+
+  /* Legacy aliases — kept so existing className references don't break */
+  --app-bg:               var(--bg-base);
+  --app-surface:          var(--bg-surface);
+  --app-elevated:         var(--bg-elevated);
+  --app-brand:            var(--brand-primary);
+  --app-brand-secondary:  #3b82f6;
+  --app-danger:           var(--danger);
+  --app-text:             var(--text-bold);
+  --app-text-secondary:   var(--text-secondary);
+  --app-text-muted:       var(--text-muted);
 }
 
+/* --- Light theme — swap data-theme="light" on <html> to activate */
+[data-theme="light"] {
+  --brand-primary:  #8AB400;                    /* Darkened volt for contrast */
+  --brand-fg:       #000000;
+  --brand-glow:     rgba(138, 180, 0, 0.25);
+
+  --bg-base:        #F4F4F4;
+  --bg-surface:     #FFFFFF;
+  --bg-elevated:    #EFEFEF;
+
+  --text-bold:      #000000;
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-muted:     rgba(0, 0, 0, 0.4);
+
+  --border-subtle:  rgba(0, 0, 0, 0.08);
+  --border-mid:     rgba(0, 0, 0, 0.15);
+
+  --danger:         #DC2626;
+  --danger-glow:    rgba(220, 38, 38, 0.25);
+
+  --app-bg:               var(--bg-base);
+  --app-surface:          var(--bg-surface);
+  --app-elevated:         var(--bg-elevated);
+  --app-brand:            var(--brand-primary);
+  --app-danger:           var(--danger);
+  --app-text:             var(--text-bold);
+  --app-text-secondary:   var(--text-secondary);
+  --app-text-muted:       var(--text-muted);
+}
+
+/* ============================================================
+   BASE RESET
+   ============================================================ */
 * {
   margin: 0;
   padding: 0;
@@ -26,59 +89,63 @@ body,
 #root {
   width: 100%;
   min-height: 100%;
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: var(--app-bg);
-  color: var(--app-text);
+  background-color: var(--bg-base);
+  color: var(--text-bold);
 }
 
-/* Core visual identity enforcement */
+/* ============================================================
+   LAYOUT
+   ============================================================ */
 .app-screen {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem; /* p-6 */
-  background: var(--app-bg);
-  color: var(--app-text);
+  background: var(--bg-base);
+  color: var(--text-bold);
 }
 
+/* ============================================================
+   COMPONENT TOKENS
+   ============================================================ */
 .app-card {
-  background: #121212; /* cards */
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
 }
 
+/* Primary brand button */
 .brand-btn {
-  background: var(--app-brand) !important;
-  color: #000 !important;
-  border-radius: 9999px !important; /* full */
+  background: var(--brand-primary) !important;
+  color: var(--brand-fg) !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 8px 30px var(--brand-glow) !important;
 }
 
-/* Global button treatment to enforce brand across all buttons */
+/* Outline / ghost */
+.brand-btn-outline {
+  background: transparent !important;
+  color: var(--brand-primary) !important;
+  border: 2px solid var(--brand-primary) !important;
+  box-shadow: none !important;
+}
+
+/* Apply brand styling to every button globally */
 button,
 .nextui-button {
   border-radius: 9999px !important;
   text-transform: uppercase !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em !important;
-  background: var(--app-brand) !important;
-  color: #000 !important;
-  border: 1px solid rgba(0, 0, 0, 0.12) !important;
-  box-shadow: 0 8px 30px rgba(212, 255, 0, 0.12) !important;
-}
-
-.brand-btn-outline {
-  background: transparent !important;
-  color: var(--app-brand) !important;
-  border: 2px solid var(--app-brand) !important;
-  box-shadow: none !important;
+  background: var(--brand-primary) !important;
+  color: var(--brand-fg) !important;
+  border: none !important;
+  box-shadow: 0 8px 30px var(--brand-glow) !important;
 }
 
 .brand-circle {
@@ -88,26 +155,25 @@ button,
   justify-content: center;
 }
 
+/* Sport-style heading — Oswald condensed athletic font */
 .brand-title {
-  font-weight: 900;
+  font-weight: 700;
   font-style: italic;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    sans-serif;
+  letter-spacing: -0.01em;
+  font-family: 'Oswald', Inter, system-ui, -apple-system, sans-serif;
 }
 
-/* Onboarding-specific styles */
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
 .onboarding-root {
   position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--app-bg);
-  color: var(--app-text);
+  background-color: var(--bg-base);
+  color: var(--text-bold);
 }
 
 .onboarding-bg {
@@ -121,7 +187,7 @@ button,
 .onboarding-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.25));
   z-index: 1;
 }
 
@@ -130,7 +196,7 @@ button,
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* bottom half layout */
+  justify-content: flex-end;
   min-height: 100vh;
   padding: 2rem;
   padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
@@ -140,104 +206,78 @@ button,
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.04);
-  padding: 1.25rem;
-  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
 }
 
 .onboarding-option {
   width: 100%;
   padding: 1rem;
   border-radius: 1rem;
-  background: rgba(0, 0, 0, 0.45);
-  border: 2px solid rgba(148, 163, 184, 0.06);
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--border-subtle);
   display: flex;
   align-items: center;
   gap: 1rem;
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .onboarding-option[aria-checked="true"] {
-  border-color: var(--app-brand);
-  background: rgba(212, 255, 0, 0.06);
+  border-color: var(--brand-primary);
+  background: color-mix(in srgb, var(--brand-primary) 6%, transparent);
 }
 
 .onboarding-next {
-  background: var(--app-brand);
-  color: #000;
+  background: var(--brand-primary);
+  color: var(--brand-fg);
   font-weight: 900;
   text-transform: uppercase;
   border-radius: 9999px;
   padding: 1rem 2rem;
-  box-shadow: 0 0 20px rgba(212, 255, 0, 0.4);
+  box-shadow: 0 0 24px var(--brand-glow);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.05em;
 }
 
 .onboarding-title {
-  font-weight: 900;
+  font-weight: 700;
   font-style: italic;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   font-size: 1.75rem;
+  font-family: 'Oswald', Inter, system-ui, -apple-system, sans-serif;
 }
 
-.onboarding-subtle {
-  color: rgba(255, 255, 255, 0.7);
-}
+.onboarding-subtle { color: var(--text-secondary); }
 
 .onboarding-grid {
   display: grid;
   gap: 0.75rem;
 }
 
+/* ============================================================
+   TYPOGRAPHY SCALE
+   ============================================================ */
 .brand-label {
   font-size: 11px;
   text-transform: uppercase;
-  color: #71717a; /* text-zinc-500 */
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  font-weight: 600;
 }
 
-/* Inputs/Selects visual default */
-.brand-input {
-  background: #0b0b0b;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 0.5rem;
-  border-radius: 8px;
-}
-
-/* App backgrounds and surfaces – use these so colors always show */
-.app-bg {
-  background-color: var(--app-bg);
-}
-.app-surface {
-  background-color: var(--app-surface);
-}
-.app-elevated {
-  background-color: var(--app-elevated);
-}
-.app-brand {
-  background-color: var(--app-brand);
-}
-.app-danger {
-  background-color: var(--app-danger);
-}
-
-.app-text {
-  color: var(--app-text);
-}
-.app-text-secondary {
-  color: var(--app-text-secondary);
-}
-.app-text-muted {
-  color: var(--app-text-muted);
-}
-
-/* Typography – large numbers so they’re never “default small” */
+/* Monospace timer — prevents layout shift */
 .app-timer {
   font-size: 80px;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 900;
   font-variant-numeric: tabular-nums;
+  font-family: "Courier New", Courier, monospace;
 }
 .app-distance {
   font-size: 48px;
@@ -251,83 +291,96 @@ button,
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-.app-hero {
-  font-size: 44px;
-  line-height: 1.05;
-  font-weight: 700;
-}
-.app-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.app-subtitle {
-  font-size: 17px;
-  line-height: 1.4;
-  font-weight: 400;
-}
+.app-hero  { font-size: 44px; line-height: 1.05; font-weight: 700; }
+.app-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.app-subtitle { font-size: 17px; line-height: 1.4; font-weight: 400; }
 
 @media (min-width: 640px) {
-  .app-timer {
-    font-size: 96px;
-  }
-  .app-distance {
-    font-size: 56px;
-  }
-  .app-metric {
-    font-size: 40px;
-  }
-  .app-hero {
-    font-size: 56px;
-  }
+  .app-timer    { font-size: 96px; }
+  .app-distance { font-size: 56px; }
+  .app-metric   { font-size: 40px; }
+  .app-hero     { font-size: 56px; }
 }
 
-/* Card and button shadows */
+/* ============================================================
+   SHADOWS — all driven by CSS vars so they retheme too
+   ============================================================ */
 .app-shadow-card {
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 1px 0 0 rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 .app-shadow-button {
-  box-shadow:
-    0 12px 40px -8px rgba(30, 215, 96, 0.5),
-    0 0 0 2px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px -8px var(--brand-glow), 0 0 0 2px rgba(255, 255, 255, 0.12);
 }
 .app-shadow-stop {
-  box-shadow:
-    0 0 0 4px rgba(239, 68, 68, 0.25),
-    0 16px 48px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 4px var(--danger-glow), 0 16px 48px -12px rgba(0, 0, 0, 0.5);
 }
-.app-shadow-bar {
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+.app-shadow-bar { box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35); }
+
+/* ============================================================
+   GLASSMORPHISM
+   ============================================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
 }
 
+/* ============================================================
+   INTERACTIVE ELEMENT POLISH
+   ============================================================ */
+button,
+[role="button"],
+[role="radio"],
+.onboarding-option,
+.onboarding-next {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover:not(:disabled),
+[role="button"]:hover,
+[role="radio"]:hover,
+.onboarding-option:hover {
+  transform: scale(1.04);
+}
+
+button:active:not(:disabled),
+[role="button"]:active,
+[role="radio"]:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   UTILITY HELPERS
+   ============================================================ */
+.app-bg            { background-color: var(--bg-base); }
+.app-surface       { background-color: var(--bg-surface); }
+.app-elevated      { background-color: var(--bg-elevated); }
+.app-brand         { background-color: var(--brand-primary); }
+.app-danger        { background-color: var(--danger); }
+.app-text          { color: var(--text-bold); }
+.app-text-secondary { color: var(--text-secondary); }
+.app-text-muted    { color: var(--text-muted); }
+.app-brand-text    { color: var(--brand-primary); }
+.app-danger-text   { color: var(--danger); }
+
 .app-brand-blur {
-  background-color: rgba(30, 215, 96, 0.12);
+  background-color: color-mix(in srgb, var(--brand-primary) 12%, transparent);
 }
 .app-gradient-bottom {
-  background: linear-gradient(to top, var(--app-surface), transparent);
+  background: linear-gradient(to top, var(--bg-surface), transparent);
 }
 .app-brand-pill {
-  background-color: rgba(30, 215, 96, 0.15);
-  border: 1px solid rgba(30, 215, 96, 0.3);
-}
-.app-brand-text {
-  color: var(--app-brand);
+  background-color: color-mix(in srgb, var(--brand-primary) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 30%, transparent);
 }
 .app-danger-bg {
   background-color: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.4);
 }
-.app-danger-text {
-  color: var(--app-danger);
-}
 
-/* Safe area padding for notched devices */
-.safe-bottom {
-  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
-}
-.safe-top {
-  padding-top: max(0.75rem, env(safe-area-inset-top));
-}
+/* Safe area insets for notched devices */
+.safe-bottom { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+.safe-top    { padding-top: max(0.75rem, env(safe-area-inset-top)); }

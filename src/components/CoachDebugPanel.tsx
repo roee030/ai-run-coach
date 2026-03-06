@@ -7,10 +7,7 @@ import type {
 
 // DEV-only panel for testing coach brain. Renders nothing outside DEV.
 export function CoachDebugPanel(): JSX.Element | null {
-  console.log("CoachDebugPanel DEV =", import.meta.env.DEV);
-  // Vite dev flag
-  // @ts-ignore
-  if (!import.meta?.env?.DEV) return null;
+  if (!import.meta.env.DEV) return null;
 
   const detectorRef = useRef(new EventDetector());
 

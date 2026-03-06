@@ -13,10 +13,10 @@ export default {
         },
         extend: {
             colors: {
-                'app-black': '#06090C',
-                'app-surface': '#0F1419',
-                'app-elevated': '#161D26',
-                'app-brand': '#1ED760',
+                'app-black': '#000000',
+                'app-surface': '#121212',
+                'app-elevated': '#181818',
+                'app-brand': '#D4FF00',      /* Volt — matches --app-brand CSS var */
                 'app-brand-secondary': '#3B82F6',
                 'app-text': '#FFFFFF',
                 'app-text-secondary': '#D1D5DB',
@@ -55,8 +55,8 @@ export default {
                 'label-cap': ['10px', { lineHeight: '1.3', fontWeight: '600' }],
             },
             boxShadow: {
-                'button': '0 12px 40px -8px rgba(30, 215, 96, 0.5), 0 0 0 2px rgba(255,255,255,0.12)',
-                'button-glow': '0 0 60px -8px rgba(30, 215, 96, 0.55)',
+                'button': '0 12px 40px -8px rgba(212, 255, 0, 0.4), 0 0 0 2px rgba(255,255,255,0.12)',
+                'button-glow': '0 0 60px -8px rgba(212, 255, 0, 0.45)',
                 'card': '0 8px 32px rgba(0, 0, 0, 0.5), 0 1px 0 0 rgba(255,255,255,0.06)',
                 'card-hover': '0 12px 40px rgba(0, 0, 0, 0.55), 0 1px 0 0 rgba(255,255,255,0.08)',
                 'stop': '0 12px 36px -6px rgba(239, 68, 68, 0.5), 0 0 0 2px rgba(255,255,255,0.1)',

@@ -1,14 +1,11 @@
 /**
- * RunStats component - displays running metrics with premium athletic styling
+ * RunStats — "Command Center" cockpit layout.
+ * Timer/Pace hero takes ~40% of screen height.
+ * Metric cards use glassmorphism (backdrop-filter: blur).
  */
 
 import { motion } from "framer-motion";
-import { Card, CardBody, Progress } from "@nextui-org/react";
-import {
-  formatDistance,
-  formatPace,
-  speedMpsToKmh,
-} from "../utils/geolocation";
+import { formatDistance, formatPace, speedMpsToKmh } from "../utils/geolocation";
 import { formatTime } from "../utils/formatting";
 
 interface RunStatsProps {
@@ -28,108 +25,124 @@ export function RunStats({
   distance,
   currentSpeed,
   pace,
-  isRunning,
-  gpsAcquired,
   coachMessageType,
-  coachIsSpeaking,
   coachDeviation,
 }: RunStatsProps) {
   const speedKmh = speedMpsToKmh(currentSpeed);
   const dev = coachDeviation ?? 0;
   const absDev = Math.min(1, Math.abs(dev));
-  // map absDev [0..1+] to pulse duration between 2s (normal) and 0.6s (fast)
   const pulseDuration = Math.max(0.6, 2 - absDev * 1.4);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
+  const pacePulsing = coachMessageType === "slow" || coachMessageType === "speed";
+  const pacePulseColor =
+    coachMessageType === "slow"
+      ? "rgba(255,99,71,0.45)"
+      : coachMessageType === "speed"
+        ? "rgba(250,204,21,0.45)"
+        : undefined;
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="flex-1 flex flex-col items-center justify-start px-4 py-6 w-full"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="flex flex-col items-center w-full gap-4"
     >
-      {/* Coach Card is handled at parent level; Timer top section */}
-      <motion.div variants={itemVariants} className="w-full mb-6">
-        <div className="text-center">
-          <div className="text-xs text-gray-400 uppercase tracking-widest font-bold">
+      {/* ── Hero: Timer + Pace (takes ~40% screen height) ── */}
+      <div className="w-full grid grid-cols-2 gap-0">
+        {/* Timer — left hero cell */}
+        <div className="flex flex-col items-center justify-center py-6 px-2">
+          <div className="app-label" style={{ color: "var(--text-muted)" }}>
             TIME
           </div>
-          <div className="mt-3 text-8xl font-black text-white font-mono tabular-nums leading-none">
+          <div
+            className="app-timer mt-1 leading-none"
+            style={{ color: "var(--text-bold)", fontSize: "clamp(52px, 14vw, 88px)" }}
+          >
             {formatTime(elapsedTime)}
           </div>
         </div>
-      </motion.div>
 
-      <motion.div variants={itemVariants} className="w-full max-w-4xl">
-        <div className="grid grid-cols-2 gap-4">
-          <Card isHoverable className="border border-white/10 bg-neutral-900">
-            <CardBody className="p-4 text-center">
-              <div className="text-xs text-gray-400 uppercase">Distance</div>
-              <div className="mt-2 text-4xl font-black text-[#1ED760]">
-                {formatDistance(distance)}
-              </div>
-              <div className="text-xs text-gray-500">km</div>
-            </CardBody>
-          </Card>
-
-          {/* Pace card: pulse when coach issues slow/speed warnings */}
-          <Card
-            isHoverable
-            className={`border border-white/10 bg-neutral-900 ${
-              coachMessageType === "slow"
-                ? "animate-pulse shadow-[0_0_28px_rgba(255,99,71,0.35)] ring-2 ring-orange-400/40"
-                : coachMessageType === "speed"
-                  ? "animate-pulse shadow-[0_0_28px_rgba(250,204,21,0.35)] ring-2 ring-yellow-400/40"
-                  : ""
-            }`}
-            style={
-              coachMessageType
-                ? { animationDuration: `${pulseDuration}s` }
-                : undefined
-            }
+        {/* Pace — right hero cell, pulses on coach warnings */}
+        <div
+          className="flex flex-col items-center justify-center py-6 px-2 rounded-2xl transition-all"
+          style={
+            pacePulsing
+              ? {
+                  background: `color-mix(in srgb, ${pacePulseColor} 60%, transparent)`,
+                  boxShadow: `0 0 32px ${pacePulseColor}`,
+                  animationDuration: `${pulseDuration}s`,
+                }
+              : undefined
+          }
+        >
+          <div className="app-label" style={{ color: pacePulsing ? "rgba(255,255,255,0.6)" : "var(--text-muted)" }}>
+            PACE
+          </div>
+          <div
+            className={`app-timer mt-1 leading-none ${pacePulsing ? "animate-pulse" : ""}`}
+            style={{
+              color: "var(--brand-primary)",
+              fontSize: "clamp(52px, 14vw, 88px)",
+            }}
           >
-            <CardBody className="p-4 text-center">
-              <div className="text-xs text-gray-400 uppercase">Pace</div>
-              <div className="mt-2 text-4xl font-black text-white">
-                {formatPace(pace)}
-              </div>
-              <div className="text-xs text-gray-500">min/km</div>
-            </CardBody>
-          </Card>
-
-          <Card isHoverable className="border border-white/10 bg-neutral-900">
-            <CardBody className="p-4 text-center">
-              <div className="text-xs text-gray-400 uppercase">
-                Current Speed
-              </div>
-              <div className="mt-2 text-4xl font-black text-white">
-                {speedKmh.toFixed(1)}
-              </div>
-              <div className="text-xs text-gray-500">km/h</div>
-            </CardBody>
-          </Card>
-
-          <Card isHoverable className="border border-white/10 bg-neutral-900">
-            <CardBody className="p-4 text-center">
-              <div className="text-xs text-gray-400 uppercase">Calories</div>
-              <div className="mt-2 text-4xl font-black text-white">—</div>
-              <div className="text-xs text-gray-500">kcal</div>
-            </CardBody>
-          </Card>
+            {formatPace(pace)}
+          </div>
+          <div className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+            min/km
+          </div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* ── Secondary metrics — glassmorphism cards ── */}
+      <div className="grid grid-cols-2 gap-3 w-full">
+        <GlassCard
+          label="Distance"
+          value={formatDistance(distance)}
+          unit="km"
+          highlight
+        />
+        <GlassCard
+          label="Speed"
+          value={speedKmh.toFixed(1)}
+          unit="km/h"
+        />
+      </div>
     </motion.div>
+  );
+}
+
+/* ---- Glassmorphism metric card ----------------------------- */
+
+function GlassCard({
+  label,
+  value,
+  unit,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div
+      className="glass-card p-4 text-center"
+    >
+      <div className="app-label" style={{ color: "var(--text-muted)" }}>
+        {label}
+      </div>
+      <div
+        className="mt-2 text-4xl font-black font-mono tabular-nums leading-none"
+        style={{ color: highlight ? "var(--brand-primary)" : "var(--text-bold)" }}
+      >
+        {value}
+      </div>
+      {unit && (
+        <div className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+          {unit}
+        </div>
+      )}
+    </div>
   );
 }
