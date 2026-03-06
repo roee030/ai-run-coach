@@ -12,6 +12,7 @@ interface MapTrackerProps {
   isRunning: boolean;
   locations?: LocationPoint[];
   isSummary?: boolean;
+  fullBleed?: boolean;
 }
 
 export function MapTracker({
@@ -19,6 +20,7 @@ export function MapTracker({
   isRunning,
   locations = [],
   isSummary = false,
+  fullBleed = false,
 }: MapTrackerProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -173,6 +175,24 @@ export function MapTracker({
       mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
     }
   }, [isSummary, locations]);
+
+  // When fullBleed, tell Leaflet to re-measure after the container settles
+  useEffect(() => {
+    if (!fullBleed || !mapInstanceRef.current) return;
+    const id = window.setTimeout(() => {
+      mapInstanceRef.current?.invalidateSize();
+    }, 50);
+    return () => window.clearTimeout(id);
+  }, [fullBleed]);
+
+  if (fullBleed) {
+    return (
+      <div
+        ref={mapRef}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+      />
+    );
+  }
 
   return (
     <div

@@ -14,6 +14,7 @@ export interface RunSummaryData {
   distance: number;
   elapsedTime: number;
   pace: number;
+  intent?: string;
 }
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
   });
 
   const [runSummary, setRunSummary] = useState<RunSummaryData | null>(null);
+  const [sessionIntent, setSessionIntent] = useState("");
 
   const handleRunFinish = (data: RunSummaryData) => {
     setRunSummary(data);
@@ -58,7 +60,12 @@ function App() {
                 transition={{ duration: 0.5 }}
                 className="flex-1"
               >
-                <HomeScreen onStartRun={() => setCurrentScreen("running")} />
+                <HomeScreen
+                  onStartRun={(intent) => {
+                    setSessionIntent(intent);
+                    setCurrentScreen("running");
+                  }}
+                />
               </motion.div>
             ) : currentScreen === "running" ? (
               <motion.div
@@ -71,6 +78,7 @@ function App() {
               >
                 <RunTracker
                   autoStart
+                  sessionIntent={sessionIntent}
                   onBack={() => setCurrentScreen("home")}
                   onFinish={handleRunFinish}
                 />

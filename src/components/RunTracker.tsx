@@ -17,9 +17,12 @@ interface RunTrackerProps {
   onBack: () => void;
   onFinish: (data: RunSummaryData) => void;
   autoStart?: boolean;
+  sessionIntent?: string;
 }
 
-export function RunTracker({ onBack, onFinish, autoStart }: RunTrackerProps) {
+export function RunTracker({ onBack, onFinish, autoStart, sessionIntent }: RunTrackerProps) {
+  // Stored for future coach context — not yet wired into prompts
+  const sessionIntentRef = useRef(sessionIntent ?? "");
   const { session, start, stop, setElapsedTime } = useRunTracker();
   const [isPaused, setIsPaused] = useState(false);
 
@@ -77,6 +80,7 @@ export function RunTracker({ onBack, onFinish, autoStart }: RunTrackerProps) {
       distance: composedDistance,
       elapsedTime,
       pace: composedPace,
+      intent: sessionIntentRef.current,
     });
   };
 
@@ -132,6 +136,7 @@ export function RunTracker({ onBack, onFinish, autoStart }: RunTrackerProps) {
     elapsedTime,
     isRunning: session.isRunning,
     isFinished: session.isFinished,
+    sessionIntent: sessionIntentRef.current,
   };
 
   const { currentMessage, isSpeaking, messageType, debug } =

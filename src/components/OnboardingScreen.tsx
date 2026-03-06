@@ -279,7 +279,7 @@ export function OnboardingScreen({ onFinish }: OnboardingProps) {
             </AnimatePresence>
 
             {/* Nav buttons */}
-            <div className="flex items-center justify-between gap-3 mt-8">
+            <div className="flex items-center justify-between gap-3 mt-12">
               <button
                 type="button"
                 onClick={handleBack}

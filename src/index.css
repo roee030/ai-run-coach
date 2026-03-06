@@ -135,17 +135,43 @@ body {
   box-shadow: none !important;
 }
 
-/* Apply brand styling to every button globally */
-button,
-.nextui-button {
-  border-radius: 9999px !important;
-  text-transform: uppercase !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.02em !important;
-  background: var(--brand-primary) !important;
-  color: var(--brand-fg) !important;
-  border: none !important;
-  box-shadow: 0 8px 30px var(--brand-glow) !important;
+/* Base button reset — shape + cursor only, NO forced brand color.
+   Individual buttons use inline styles or .btn-* classes below. */
+button {
+  border-radius: 9999px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  /* Prevent browser from applying its own background/border/color defaults */
+  background: transparent;
+  border: none;
+  color: inherit;
+}
+
+/* Scoped button variants — add these classes when needed */
+.btn-brand {
+  background: var(--brand-primary);
+  color: var(--brand-fg);
+  border: none;
+  box-shadow: 0 0 32px var(--brand-glow);
+}
+
+.btn-outline {
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--brand-primary);
+  border: 1px solid var(--border-mid);
+  backdrop-filter: blur(10px);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+  border: 2px solid var(--danger);
+  box-shadow: 0 0 20px var(--danger-glow);
 }
 
 .brand-circle {
@@ -217,13 +243,17 @@ button,
   width: 100%;
   padding: 1rem;
   border-radius: 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  color: var(--text-bold);      /* explicit white text — prevents browser black default */
+  text-transform: none;         /* override global button text-transform */
+  letter-spacing: normal;       /* override global button letter-spacing */
+  font-weight: normal;          /* override global button font-weight for children */
 }
 
 .onboarding-option[aria-checked="true"] {
@@ -271,13 +301,14 @@ button,
   font-weight: 600;
 }
 
-/* Monospace timer — prevents layout shift */
+/* Athletic run timer — Oswald condensed + tabular-nums prevents layout shift */
 .app-timer {
   font-size: 80px;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'Oswald', Inter, system-ui, sans-serif;
+  letter-spacing: -0.01em;
 }
 .app-distance {
   font-size: 48px;

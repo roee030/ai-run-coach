@@ -1,6 +1,7 @@
 /**
- * RunningScreen — "Command Center"
- * Map fills the full background; stats + controls float over it.
+ * RunningScreen — "Cockpit" layout.
+ * Dark brand background. Map is a contained card.
+ * Metrics perfectly centred. Back button at z-50.
  */
 
 import { useState } from "react";
@@ -64,32 +65,19 @@ export function RunningScreen({
   };
 
   return (
-    <div className="app-screen w-full min-h-screen relative overflow-hidden">
-      {/* ── Full-bleed map background ── */}
-      <div className="absolute inset-0 z-0">
-        <MapTracker
-          lastLocation={lastLocation}
-          isRunning={isRunning}
-          locations={locations}
-          isSummary={!isRunning && isFinished}
-        />
-      </div>
-
-      {/* Gradient scrim: bottom two-thirds darkened so stats are readable */}
+    <div
+      className="w-full min-h-screen flex flex-col"
+      style={{ background: "var(--bg-base)", color: "var(--text-bold)" }}
+    >
+      {/* ── Header — always on top ── */}
       <div
-        className="absolute inset-0 z-10 pointer-events-none"
+        className="flex items-center justify-between px-4 pt-safe"
         style={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 45%, rgba(0,0,0,0.15) 100%)",
+          paddingTop: "max(3rem, env(safe-area-inset-top))",
+          paddingBottom: "0.75rem",
+          position: "relative",
+          zIndex: 50,
         }}
-      />
-
-      {/* ── Header bar ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3"
       >
         <button
           type="button"
@@ -99,27 +87,30 @@ export function RunningScreen({
             width: 44,
             height: 44,
             borderRadius: "50%",
-            background: "rgba(0,0,0,0.5)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255,255,255,0.15)",
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-mid)",
             color: "var(--brand-primary)",
             fontSize: "1.25rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
+            flexShrink: 0,
+            position: "relative",
+            zIndex: 50,
           }}
         >
           ←
         </button>
 
         {isRunning && !isPaused && (
-          <div
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             className="flex items-center gap-2 px-4 py-1.5 rounded-full"
             style={{
-              background: "rgba(0,0,0,0.5)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid color-mix(in srgb, var(--brand-primary) 30%, transparent)",
+              background: "color-mix(in srgb, var(--brand-primary) 12%, transparent)",
+              border: "1px solid color-mix(in srgb, var(--brand-primary) 35%, transparent)",
             }}
           >
             <span
@@ -132,64 +123,84 @@ export function RunningScreen({
             >
               Live
             </span>
-          </div>
+          </motion.div>
         )}
 
         {isPaused && (
           <div
             className="flex items-center gap-2 px-4 py-1.5 rounded-full"
             style={{
-              background: "rgba(0,0,0,0.5)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.2)",
+              background: "var(--bg-surface)",
+              border: "1px solid var(--border-mid)",
             }}
           >
-            <span className="text-xs font-bold uppercase tracking-widest text-white/60">
+            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
               Paused
             </span>
           </div>
         )}
-      </motion.div>
 
-      {/* ── Stats + controls floating panel ── */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-20 px-4"
-        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
-      >
-        <div className="max-w-lg mx-auto flex flex-col gap-4">
-          {error && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="px-4 py-3 rounded-xl text-sm font-semibold text-white"
-              style={{ background: "rgba(239,68,68,0.25)", border: "1px solid rgba(239,68,68,0.5)" }}
-            >
-              {error}
-            </motion.div>
-          )}
+        {/* Spacer so header content stays left-aligned when no indicator */}
+        {!isRunning && !isPaused && <div style={{ width: 44 }} />}
+      </div>
 
-          <RunStats
-            elapsedTime={elapsedTime}
-            distance={distance}
-            currentSpeed={currentSpeed}
-            pace={pace}
+      {/* ── Scrollable content ── */}
+      <div className="flex-1 overflow-y-auto px-4 flex flex-col gap-5 pb-4">
+        {error && (
+          <div
+            className="px-4 py-3 rounded-xl text-sm font-semibold"
+            style={{ background: "rgba(239,68,68,0.2)", border: "1px solid rgba(239,68,68,0.45)", color: "white" }}
+          >
+            {error}
+          </div>
+        )}
+
+        {/* Metrics */}
+        <RunStats
+          elapsedTime={elapsedTime}
+          distance={distance}
+          currentSpeed={currentSpeed}
+          pace={pace}
+          isRunning={isRunning}
+          gpsAcquired={gpsAcquired}
+          coachMessageType={coachMessageType}
+          coachIsSpeaking={coachIsSpeaking}
+          coachDeviation={coachDeviation}
+        />
+
+        {/* Map — contained card */}
+        <div
+          className="w-full overflow-hidden"
+          style={{
+            borderRadius: "20px",
+            height: 220,
+            border: "1px solid var(--border-mid)",
+            flexShrink: 0,
+          }}
+        >
+          <MapTracker
+            lastLocation={lastLocation}
             isRunning={isRunning}
-            gpsAcquired={gpsAcquired}
-            coachMessageType={coachMessageType}
-            coachIsSpeaking={coachIsSpeaking}
-            coachDeviation={coachDeviation}
-          />
-
-          <RunControls
-            isRunning={isRunning}
-            isPaused={isPaused}
-            error={error}
-            onStart={onStart}
-            onPause={onPause}
-            onResume={onResume}
-            onStop={onStop}
+            locations={locations}
+            isSummary={!isRunning && isFinished}
           />
         </div>
+      </div>
+
+      {/* ── Controls — pinned to bottom ── */}
+      <div
+        className="px-4"
+        style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+      >
+        <RunControls
+          isRunning={isRunning}
+          isPaused={isPaused}
+          error={error}
+          onStart={onStart}
+          onPause={onPause}
+          onResume={onResume}
+          onStop={onStop}
+        />
       </div>
 
       {/* ── Quit confirmation overlay ── */}
@@ -199,20 +210,27 @@ export function RunningScreen({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex items-center justify-center px-6"
-            style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 100,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "1.5rem",
+              background: "rgba(0,0,0,0.8)",
+              backdropFilter: "blur(10px)",
+            }}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="glass-card p-8 w-full max-w-sm flex flex-col items-center gap-6 text-center"
+              exit={{ scale: 0.92, opacity: 0 }}
+              className="glass-card w-full flex flex-col items-center gap-6 text-center"
+              style={{ maxWidth: 320, padding: "2rem" }}
             >
               <div>
-                <h2
-                  className="brand-title text-3xl"
-                  style={{ color: "var(--text-bold)" }}
-                >
+                <h2 className="brand-title text-3xl" style={{ color: "var(--text-bold)" }}>
                   Quit Run?
                 </h2>
                 <p className="text-sm mt-2" style={{ color: "var(--text-muted)" }}>
@@ -226,15 +244,15 @@ export function RunningScreen({
                   onClick={() => setShowQuit(false)}
                   style={{
                     padding: "0.9rem",
-                    borderRadius: "9999px",
                     background: "var(--brand-primary)",
                     color: "var(--brand-fg)",
                     fontWeight: 900,
                     fontSize: "0.85rem",
                     letterSpacing: "0.08em",
-                    textTransform: "uppercase",
                     border: "none",
+                    borderRadius: "9999px",
                     cursor: "pointer",
+                    fontFamily: "'Oswald', Inter, system-ui, sans-serif",
                   }}
                 >
                   Keep Running
@@ -244,15 +262,15 @@ export function RunningScreen({
                   onClick={() => { setShowQuit(false); onBack(); }}
                   style={{
                     padding: "0.9rem",
-                    borderRadius: "9999px",
                     background: "transparent",
                     color: "var(--danger)",
                     fontWeight: 900,
                     fontSize: "0.85rem",
                     letterSpacing: "0.08em",
-                    textTransform: "uppercase",
                     border: "2px solid var(--danger)",
+                    borderRadius: "9999px",
                     cursor: "pointer",
+                    fontFamily: "'Oswald', Inter, system-ui, sans-serif",
                   }}
                 >
                   Quit

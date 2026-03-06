@@ -133,8 +133,12 @@ function GlassCard({
         {label}
       </div>
       <div
-        className="mt-2 text-4xl font-black font-mono tabular-nums leading-none"
-        style={{ color: highlight ? "var(--brand-primary)" : "var(--text-bold)" }}
+        className="mt-2 text-4xl font-black leading-none"
+        style={{
+          color: highlight ? "var(--brand-primary)" : "var(--text-bold)",
+          fontFamily: "'Oswald', Inter, system-ui, sans-serif",
+          fontVariantNumeric: "tabular-nums",
+        }}
       >
         {value}
       </div>

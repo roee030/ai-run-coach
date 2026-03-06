@@ -1,23 +1,19 @@
 /**
  * HomeScreen — "Mission Control"
- * Greeting from localStorage, Today's Plan card, massive sonar-pulse START button, goal chip.
+ * Greeting, session-intent input, sonar-pulse START, goal chip.
  */
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 
 interface HomeScreenProps {
-  onStartRun: () => void;
+  onStartRun: (intent: string) => void;
   onHistory?: () => void;
 }
 
 interface OnboardingData {
-  gender?: string;
-  fitnessLevel?: string;
   goal?: string;
   weeklyGoal?: string;
-  coachStyle?: string;
-  easyPace?: string;
 }
 
 function loadOnboarding(): OnboardingData {
@@ -38,6 +34,7 @@ function greeting(): string {
 
 export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
   const profile = useMemo(() => loadOnboarding(), []);
+  const [sessionIntent, setSessionIntent] = useState("");
 
   const goalChip = [profile.goal, profile.weeklyGoal ? `${profile.weeklyGoal} days/wk` : null]
     .filter(Boolean)
@@ -48,7 +45,7 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
       className="app-screen w-full min-h-screen flex flex-col items-center justify-between relative overflow-hidden"
       style={{ background: "var(--bg-base)" }}
     >
-      {/* Ambient background glow */}
+      {/* Ambient glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -57,7 +54,7 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
         }}
       />
 
-      {/* Top bar: greeting + history icon */}
+      {/* ── Top bar ── */}
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -65,78 +62,80 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
         className="relative z-10 w-full px-6 pt-14 flex items-start justify-between"
       >
         <div>
-          <p
-            className="text-sm font-semibold uppercase tracking-widest"
-            style={{ color: "var(--text-muted)" }}
-          >
+          <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
             {greeting()}
           </p>
-          <h1
-            className="brand-title text-5xl sm:text-6xl mt-1"
-            style={{ color: "var(--text-bold)" }}
-          >
+          <h1 className="brand-title text-5xl sm:text-6xl mt-1" style={{ color: "var(--text-bold)" }}>
             Ready to run?
           </h1>
         </div>
 
-        {/* History icon (placeholder — wired to onHistory when feature lands) */}
         <button
           type="button"
           onClick={onHistory}
           aria-label="Run history"
+          className="btn-outline"
           style={{
             width: 44,
             height: 44,
             borderRadius: "50%",
+            fontSize: "1.1rem",
+            flexShrink: 0,
+            marginTop: "4px",
             background: "var(--bg-surface)",
             border: "1px solid var(--border-mid)",
             color: "var(--text-secondary)",
-            fontSize: "1.1rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            flexShrink: 0,
-            marginTop: "4px",
           }}
         >
           ≡
         </button>
       </motion.div>
 
-      {/* Today's Plan card + sonar button area */}
+      {/* ── Centre: intent input + sonar button ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.85 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="relative z-10 flex flex-col items-center gap-8"
+        transition={{ duration: 0.5, delay: 0.15 }}
+        className="relative z-10 flex flex-col items-center gap-8 w-full px-6"
       >
-        {/* Today's Plan placeholder card */}
-        <div
-          className="glass-card px-6 py-4 flex items-center gap-4"
-          style={{ minWidth: 260 }}
-        >
-          <div
-            className="text-2xl flex-shrink-0"
-            style={{ color: "var(--brand-primary)" }}
+        {/* Session intent input */}
+        <div style={{ width: "100%", maxWidth: 340 }}>
+          <label
+            htmlFor="session-intent"
+            className="block text-xs uppercase tracking-widest font-bold mb-2"
+            style={{ color: "var(--text-muted)" }}
           >
-            📋
-          </div>
-          <div>
-            <p
-              className="text-xs uppercase tracking-widest font-bold"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Today's Plan
-            </p>
-            <p
-              className="text-sm font-black uppercase mt-0.5"
-              style={{ color: "var(--text-bold)" }}
-            >
-              Free Run — No Limits
-            </p>
+            What's your goal for today's run?
+          </label>
+          <div
+            className="glass-card flex items-center gap-3 px-4 py-3"
+            style={{ borderRadius: "14px" }}
+          >
+            <span style={{ color: "var(--brand-primary)", fontSize: "1rem", flexShrink: 0 }}>🎯</span>
+            <input
+              id="session-intent"
+              type="text"
+              value={sessionIntent}
+              onChange={(e) => setSessionIntent(e.target.value)}
+              placeholder="e.g., 5km easy, beat 5:30 pace..."
+              maxLength={120}
+              style={{
+                flex: 1,
+                background: "transparent",
+                border: "none",
+                outline: "none",
+                color: "var(--text-bold)",
+                fontSize: "0.875rem",
+                fontFamily: "Inter, system-ui, sans-serif",
+                caretColor: "var(--brand-primary)",
+                minWidth: 0,
+              }}
+            />
           </div>
         </div>
+
+        {/* Extra breathing room between input and button */}
+        <div style={{ height: 16 }} />
 
         {/* Sonar rings + START button */}
         <div className="relative flex items-center justify-center">
@@ -144,28 +143,15 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
             <motion.div
               key={i}
               className="absolute rounded-full"
-              style={{
-                width: 200,
-                height: 200,
-                border: "2px solid var(--brand-primary)",
-                opacity: 0,
-              }}
-              animate={{
-                scale: [1, 2.2 + i * 0.4],
-                opacity: [0.5, 0],
-              }}
-              transition={{
-                duration: 2.4,
-                repeat: Infinity,
-                delay: i * 0.65,
-                ease: "easeOut",
-              }}
+              style={{ width: 200, height: 200, border: "2px solid var(--brand-primary)", opacity: 0 }}
+              animate={{ scale: [1, 2.2 + i * 0.4], opacity: [0.45, 0] }}
+              transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.65, ease: "easeOut" }}
             />
           ))}
 
           <button
             type="button"
-            onClick={onStartRun}
+            onClick={() => onStartRun(sessionIntent)}
             aria-label="Start run"
             style={{
               width: 200,
@@ -190,12 +176,10 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
               transition: "transform 0.15s ease, box-shadow 0.15s ease",
               fontFamily: "'Oswald', Inter, system-ui, sans-serif",
             }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.06)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
-            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.06)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)"; }}
+            onMouseDown={(e)  => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.96)"; }}
+            onMouseUp={(e)    => { (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.06)"; }}
           >
             <span style={{ fontSize: "2.5rem", lineHeight: 1 }}>▶</span>
             <span>Start</span>
@@ -203,11 +187,11 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
         </div>
       </motion.div>
 
-      {/* Goal chip + tagline */}
+      {/* ── Bottom: goal chip + tagline ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
         className="relative z-10 w-full px-6 pb-14 flex flex-col items-center gap-3"
       >
         {goalChip ? (
@@ -222,10 +206,7 @@ export function HomeScreen({ onStartRun, onHistory }: HomeScreenProps) {
             {goalChip}
           </div>
         ) : null}
-        <p
-          className="text-xs uppercase tracking-wider text-center"
-          style={{ color: "var(--text-muted)" }}
-        >
+        <p className="text-xs uppercase tracking-wider text-center" style={{ color: "var(--text-muted)" }}>
           GPS-powered · AI coach · Real-time metrics
         </p>
       </motion.div>
