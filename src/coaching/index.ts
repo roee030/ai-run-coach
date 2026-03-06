@@ -34,3 +34,10 @@ export {
 
 // Main Engine
 export { CoachingEngine, createCoachingEngine } from "./coachingEngine";
+
+// New Coach Brain (pure decision API)
+export type { RunState } from "./coachTypes";
+export type { RunEvent } from "./coachTypes";
+export type { CoachState, CoachIntent } from "./coachTypes";
+export { EventDetector } from "./eventDetector";
+export { update as coachUpdate } from "./coach";

@@ -1,49 +1,134 @@
 /**
- * HomeScreen - Hero with separate play button and label (text not inside button)
+ * HomeScreen - Hero with centered large circular START button
  */
+
+import { motion } from "framer-motion";
+import { Button, Card, CardBody } from "@nextui-org/react";
 
 interface HomeScreenProps {
   onStartRun: () => void;
 }
 
 export function HomeScreen({ onStartRun }: HomeScreenProps) {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
+  };
+
+  const pulseVariants = {
+    pulse: {
+      scale: [1, 1.05, 1],
+      transition: { duration: 2, repeat: Infinity },
+    },
+  };
+
   return (
-    <div className="min-h-screen md:min-h-full w-full app-bg flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Depth */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute top-1/4 -left-24 w-[320px] h-[320px] rounded-full blur-[120px] app-brand-blur" />
-        <div className="absolute bottom-0 left-0 right-0 h-2/5 app-gradient-bottom opacity-80" />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="app-screen w-full bg-black flex items-start justify-center relative overflow-hidden"
+    >
+      {/* Background image + ambient glow */}
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0 bg-cover bg-center filter blur-sm opacity-30"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1520975913222-2c09f9f5b6c5')",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-[480px] mx-auto px-6 sm:px-8 md:px-10 py-12 sm:py-16 md:py-20 safe-top safe-bottom">
-        <header className="flex flex-col items-center gap-4 sm:gap-5 text-center mb-10 sm:mb-14">
-          <h1 className="app-hero app-text tracking-tight">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative z-10 flex flex-col items-center justify-center w-full max-w-lg mx-auto"
+      >
+        {/* Header */}
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-center gap-3 text-center mb-16"
+        >
+          <h1 className="text-5xl sm:text-7xl brand-title text-white leading-tight">
             Run Tracker
           </h1>
-          <p className="app-subtitle app-text-secondary max-w-[280px] sm:max-w-none">
-            Ready to run?
+          <p className="text-lg brand-label mt-1">
+            Your personal running companion
           </p>
-        </header>
+        </motion.div>
 
-        {/* Button and label are separate: circle = button, text = label below */}
-        <div className="flex flex-col items-center gap-4">
-          <button
-            type="button"
-            onClick={onStartRun}
-            className="w-[140px] h-[140px] sm:w-[150px] sm:h-[150px] rounded-full app-brand app-shadow-button flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--app-brand)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--app-bg)] hover:opacity-95 active:scale-95 transition-all"
-            aria-label="Start run"
-          >
-            <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
-              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-            </svg>
-          </button>
-          <span className="app-label app-text">Start</span>
-        </div>
+        {/* Large Circular START Button */}
+        <motion.div variants={itemVariants} className="mb-16">
+          <motion.div variants={pulseVariants} animate="pulse">
+            <Button
+              isIconOnly
+              onClick={onStartRun}
+              className="brand-circle brand-btn h-40 w-40 sm:h-60 sm:w-60 text-4xl sm:text-5xl font-black"
+              size="lg"
+              aria-label="Start run"
+            >
+              ▶
+            </Button>
+          </motion.div>
+          <div className="text-center mt-6">
+            <p className="text-xl font-black text-white uppercase tracking-widest">
+              Start
+            </p>
+            <p className="text-xs text-gray-400 uppercase tracking-wider mt-1">
+              Begin Your Run
+            </p>
+          </div>
+        </motion.div>
 
-        <p className="mt-12 sm:mt-14 app-label app-text-muted text-center max-w-[300px]">
-          Track distance, pace & speed
-        </p>
-      </div>
-    </div>
+        {/* Stats Preview Cards */}
+        <motion.div variants={itemVariants} className="w-full max-w-md">
+          <div className="grid grid-cols-2 gap-3 w-full">
+            <Card className="app-card">
+              <CardBody className="p-4 text-center">
+                <div className="brand-label">Distance</div>
+                <div className="mt-2 text-4xl brand-title app-brand-text">
+                  0.0
+                </div>
+                <div className="text-xs text-zinc-500">km</div>
+              </CardBody>
+            </Card>
+
+            <Card className="app-card">
+              <CardBody className="p-4 text-center">
+                <div className="brand-label">Time</div>
+                <div className="mt-2 text-4xl brand-title">00:00</div>
+              </CardBody>
+            </Card>
+          </div>
+          <div className="mt-3">
+            <Card className="app-card">
+              <CardBody className="p-4 text-center">
+                <div className="brand-label">Pace</div>
+                <div className="mt-2 text-3xl brand-title">—</div>
+              </CardBody>
+            </Card>
+          </div>
+        </motion.div>
+
+        {/* Footer Text */}
+        <motion.p
+          variants={itemVariants}
+          className="mt-16 text-xs text-gray-500 text-center max-w-xs uppercase tracking-wider"
+        >
+          Track distance, pace & speed with precision GPS
+        </motion.p>
+      </motion.div>
+    </motion.div>
   );
 }

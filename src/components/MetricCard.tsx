@@ -1,5 +1,5 @@
 /**
- * MetricCard - Uses CSS design tokens so colors and typography always apply
+ * MetricCard - Premium dark athletic card for metric display
  */
 
 interface MetricCardProps {
@@ -10,17 +10,17 @@ interface MetricCardProps {
 
 export function MetricCard({ label, value, unit }: MetricCardProps) {
   return (
-    <div
-      className="rounded-2xl app-surface border border-white/10 px-5 py-6 sm:px-6 sm:py-7 app-shadow-card flex flex-col items-center justify-center min-h-[100px] sm:min-h-[112px]"
-    >
-      <span className="app-label app-text-secondary mb-2 tracking-wider">
+    <div className="rounded-card bg-app-surface border border-white/8 px-md py-lg shadow-card flex flex-col items-center justify-center min-h-32">
+      <span className="text-label text-app-text-muted mb-3 uppercase tracking-widest font-black">
         {label}
       </span>
-      <span className="app-metric app-text leading-none">
+      <span className="text-metric font-black text-app-text leading-none">
         {value}
       </span>
       {unit && (
-        <span className="app-label app-text-muted mt-1.5 tracking-wider">{unit}</span>
+        <span className="text-label text-app-text-muted mt-3 uppercase tracking-wider font-semibold">
+          {unit}
+        </span>
       )}
     </div>
   );

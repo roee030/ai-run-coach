@@ -27,18 +27,15 @@ export function MapTracker({
   const markerRef = useRef<L.CircleMarker | null>(null);
   const locationMarkersRef = useRef<L.CircleMarker[]>([]);
 
-  // Initialize map
+  // Initialize map (only once on mount)
   useEffect(() => {
     if (!mapRef.current) return;
 
     // Default location (San Francisco)
     const defaultCenter: [number, number] = [37.7749, -122.4194];
-    const center: [number, number] = lastLocation
-      ? [lastLocation.latitude, lastLocation.longitude]
-      : defaultCenter;
 
     // Initialize Leaflet map
-    mapInstanceRef.current = L.map(mapRef.current).setView(center, 16);
+    mapInstanceRef.current = L.map(mapRef.current).setView(defaultCenter, 16);
 
     // Add OpenStreetMap tile layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -56,8 +53,8 @@ export function MapTracker({
       lineJoin: "round",
     }).addTo(mapInstanceRef.current);
 
-    // Create marker for current position
-    markerRef.current = L.circleMarker(center as [number, number], {
+    // Create marker for current position (will be updated by location effect)
+    markerRef.current = L.circleMarker(defaultCenter, {
       radius: 8,
       fillColor: "#9D4EDD",
       color: "#ffffff",
@@ -75,9 +72,9 @@ export function MapTracker({
         mapInstanceRef.current = null;
       }
     };
-  }, [lastLocation]);
+  }, []); // Empty dependency array - only init once
 
-  // Update map with new location
+  // Update map with new location (continuous, no dependency on isRunning to avoid re-renders)
   useEffect(() => {
     if (
       !lastLocation ||
@@ -92,18 +89,25 @@ export function MapTracker({
       lastLocation.longitude,
     ];
 
-    // Add to path
-    pathRef.current.push(newPosition);
+    // Only add to path if different from last position (avoid duplicates)
+    const lastPath = pathRef.current[pathRef.current.length - 1];
+    if (
+      !lastPath ||
+      lastPath[0] !== newPosition[0] ||
+      lastPath[1] !== newPosition[1]
+    ) {
+      pathRef.current.push(newPosition);
 
-    // Update polyline
-    polylineRef.current.setLatLngs(pathRef.current);
+      // Update polyline with new path
+      polylineRef.current.setLatLngs(pathRef.current);
+    }
 
-    // Update marker
+    // Update marker position
     markerRef.current.setLatLng(newPosition);
 
-    // Pan to marker if running
-    if (isRunning) {
-      mapInstanceRef.current.panTo(newPosition);
+    // Pan to position during active run (only)
+    if (isRunning && mapInstanceRef.current) {
+      mapInstanceRef.current.panTo(newPosition, { animate: false });
     }
   }, [lastLocation, isRunning]);
 

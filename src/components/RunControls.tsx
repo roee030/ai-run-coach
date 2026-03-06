@@ -1,6 +1,9 @@
 /**
- * RunControls component - Start/Stop buttons and error display
+ * RunControls component - Large interactive start/stop/reset buttons
  */
+
+import { motion } from "framer-motion";
+import { Button, Card, CardBody, Alert } from "@nextui-org/react";
 
 interface RunControlsProps {
   isRunning: boolean;
@@ -18,69 +21,81 @@ export function RunControls({
   onReset,
 }: RunControlsProps) {
   return (
-    <div className="bg-bg-primary px-6 py-8 border-t border-white border-opacity-5 max-w-4xl mx-auto w-full">
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="px-4 py-6 w-full max-w-md mx-auto"
+    >
       {/* Error Display */}
       {error && (
-        <div className="bg-danger bg-opacity-10 border border-danger border-opacity-30 rounded-card px-4 py-3 mb-8 backdrop-blur-sm">
-          <p className="text-danger text-sm font-semibold">{error}</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mb-4"
+        >
+          <Alert
+            color="danger"
+            title="Error"
+            description={error}
+            className="bg-red-500/10"
+          />
+        </motion.div>
       )}
 
-      {/* Controls */}
-      <div className="flex gap-4">
+      {/* Controls - Large Buttons */}
+      <div className="flex gap-3 items-center justify-center">
         {!isRunning ? (
-          <button
-            onClick={onStart}
-            className="flex-1 h-20 rounded-pill bg-brand-primary hover:bg-opacity-90 active:bg-opacity-75 text-bg-primary font-bold text-xl shadow-button hover:shadow-lg transition-all duration-300 flex items-center justify-center group relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-white opacity-0 group-active:opacity-5 transition-opacity"></div>
-            <span className="relative flex items-center gap-2">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-              </svg>
-              Start Run
-            </span>
-          </button>
+          <motion.div className="w-full flex justify-center">
+            <Button
+              onClick={onStart}
+              size="lg"
+              className="brand-circle brand-btn h-28 w-28 sm:h-32 sm:w-32 text-2xl font-black"
+              aria-label="Start run"
+            >
+              ▶
+            </Button>
+          </motion.div>
         ) : (
           <>
-            <button
-              onClick={onStop}
-              className="flex-1 h-20 rounded-pill bg-danger hover:bg-opacity-90 active:bg-opacity-75 text-white font-bold text-xl shadow-lg shadow-danger/40 hover:shadow-xl hover:shadow-danger/60 transition-all duration-300 flex items-center justify-center group relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-white opacity-0 group-active:opacity-10 transition-opacity"></div>
-              <span className="relative flex items-center gap-2">
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" />
-                </svg>
-                Stop
-              </span>
-            </button>
-            <button
-              onClick={onReset}
-              className="w-20 h-20 rounded-pill bg-white bg-opacity-10 hover:bg-opacity-15 active:bg-opacity-20 border border-white border-opacity-20 hover:border-opacity-30 text-white font-bold text-lg transition-all duration-300 flex items-center justify-center group"
-              title="Reset session"
-            >
-              <svg
-                className="w-6 h-6 group-active:rotate-180 transition-transform duration-300"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+            <motion.div className="flex gap-4 items-center">
+              <Button
+                onClick={onStop}
+                size="lg"
+                className="brand-circle h-20 w-20 text-lg font-black"
+                aria-label="Pause run"
               >
-                <path d="M4 10a6 6 0 016-6v3l4-4-4-4v3a8 8 0 000 16 8 8 0 000-16z" />
-              </svg>
-            </button>
+                ⏸
+              </Button>
+
+              <Button
+                onClick={onReset}
+                size="lg"
+                className="brand-circle bg-red-600 text-white h-20 w-20 text-lg font-black"
+                aria-label="Stop run"
+              >
+                ■
+              </Button>
+            </motion.div>
           </>
         )}
       </div>
 
-      {/* Notes */}
-      <div className="mt-8 text-xs text-text-secondary text-center space-y-1">
-        <p>Keep screen on during your run</p>
-        <p>Grant location access for accurate tracking</p>
-      </div>
-    </div>
+      {/* Safety Tips */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="mt-6 text-center"
+      >
+        <Card className="bg-neutral-900 border border-neutral-800">
+          <CardBody className="p-3">
+            <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">
+              Keep screen on • Grant location access
+            </p>
+          </CardBody>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -10,11 +10,14 @@
     "deploy": "gh-pages -d dist",
     "dev": "vite",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
+    "@nextui-org/react": "^2.6.11",
     "@tailwindcss/postcss": "^4.1.18",
+    "framer-motion": "^12.34.3",
     "leaflet": "^1.9.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -36,6 +39,7 @@
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^2.1.8"
   }
 }

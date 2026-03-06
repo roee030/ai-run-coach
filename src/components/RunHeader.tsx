@@ -10,7 +10,7 @@ interface RunHeaderProps {
 
 export function RunHeader({ isRunning, gpsAcquired, onBack }: RunHeaderProps) {
   return (
-    <div className="bg-bg-primary px-6 py-4 border-b border-white border-opacity-5 backdrop-blur-sm sticky top-0 z-10">
+    <div className="bg-app-black px-6 py-4 border-b border-white border-opacity-5 backdrop-blur-sm sticky top-0 z-10">
       <div className="flex items-center justify-between max-w-4xl mx-auto">
         <button
           onClick={onBack}
@@ -23,13 +23,11 @@ export function RunHeader({ isRunning, gpsAcquired, onBack }: RunHeaderProps) {
         </button>
 
         <div className="flex-1 flex items-center justify-center gap-3">
-          <h1 className="text-title font-bold text-text-primary">
-            Run Tracker
-          </h1>
+          <h1 className="text-title font-bold text-app-text">Run Tracker</h1>
           {isRunning && (
             <div className="flex items-center gap-2 ml-4">
-              <span className="inline-flex h-2 w-2 rounded-full bg-brand-primary animate-pulse"></span>
-              <span className="text-xs font-bold text-brand-primary uppercase tracking-wide">
+              <span className="inline-flex h-2 w-2 rounded-full bg-app-brand animate-pulse"></span>
+              <span className="text-xs font-bold text-app-brand uppercase tracking-wide">
                 LIVE
               </span>
             </div>
@@ -43,7 +41,7 @@ export function RunHeader({ isRunning, gpsAcquired, onBack }: RunHeaderProps) {
             </div>
           )}
           {gpsAcquired && isRunning && (
-            <div className="text-xs font-bold text-brand-primary bg-brand-primary bg-opacity-10 px-3 py-1 rounded-pill">
+            <div className="text-xs font-bold text-app-brand bg-app-brand bg-opacity-10 px-3 py-1 rounded-pill">
               GPS ✓
             </div>
           )}

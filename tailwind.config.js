@@ -1,8 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+import { nextui } from "@nextui-org/react";
+
 export default {
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
+        "./node_modules/@nextui-org/react/dist/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         fontFamily: {
@@ -10,21 +13,15 @@ export default {
         },
         extend: {
             colors: {
-                bg: {
-                    primary: '#06090C',
-                    surface: '#0F1419',
-                    elevated: '#161D26',
-                },
-                brand: {
-                    primary: '#1ED760',
-                    secondary: '#3B82F6',
-                },
-                text: {
-                    primary: '#FFFFFF',
-                    secondary: '#D1D5DB',
-                    muted: '#9CA3AF',
-                },
-                danger: '#EF4444',
+                'app-black': '#06090C',
+                'app-surface': '#0F1419',
+                'app-elevated': '#161D26',
+                'app-brand': '#1ED760',
+                'app-brand-secondary': '#3B82F6',
+                'app-text': '#FFFFFF',
+                'app-text-secondary': '#D1D5DB',
+                'app-text-muted': '#9CA3AF',
+                'app-danger': '#EF4444',
             },
             spacing: {
                 xs: '8px',
@@ -82,5 +79,5 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [nextui()],
 };
