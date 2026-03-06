@@ -5,7 +5,6 @@ import { HomeScreen } from "./components/HomeScreen";
 import { RunTracker } from "./components/RunTracker";
 import CoachDebugPanel from "./components/CoachDebugPanel";
 import { OnboardingScreen } from "./components/OnboardingScreen";
-import "./App.css";
 import "./index.css";
 
 type Screen = "onboarding" | "home" | "running";
@@ -15,13 +14,11 @@ function App() {
     try {
       const stored = localStorage.getItem("onboarding");
       return stored ? ("home" as Screen) : ("onboarding" as Screen);
-    } catch (e) {
+    } catch {
       return "onboarding";
     }
   });
 
-  console.log("DEV?", import.meta.env.DEV);
-  console.log("MODE?", import.meta.env.MODE);
   return (
     <NextUIProvider>
       <div className="min-h-screen w-full bg-black flex flex-col md:flex-row md:justify-center md:items-center">

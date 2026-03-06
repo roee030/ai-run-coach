@@ -8,10 +8,12 @@ type RunState = {
   isFinished?: boolean;
 };
 
+type MessageType = "slow" | "speed" | "km" | "intro" | "finish" | null;
+
 type UseCoachEngineResult = {
   currentMessage: string | null;
   isSpeaking: boolean;
-  messageType: "slow" | "speed" | "km" | "intro" | "finish" | null;
+  messageType: MessageType;
   debug: {
     lastSpokenAt: number | null;
     lastMessage: string | null;
@@ -20,6 +22,10 @@ type UseCoachEngineResult = {
     lastKmPaceStr: string | null;
     lastKmAnnounced: number;
     cooldownRemainingMs: number;
+    deviation: number;
+    prevPace: number | null;
+    lastMessageType: MessageType;
+    lastMessageTypeAt: number | null;
   };
 };
 

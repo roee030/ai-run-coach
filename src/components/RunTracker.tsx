@@ -17,8 +17,7 @@ interface RunTrackerProps {
 }
 
 export function RunTracker({ onBack }: RunTrackerProps) {
-  const { session, start, stop, resume, finish, setElapsedTime } =
-    useRunTracker();
+  const { session, start, stop, setElapsedTime } = useRunTracker();
   const { elapsedTime, reset: resetTimer } = useTimer(session.isRunning);
 
   useEffect(() => {
@@ -26,19 +25,18 @@ export function RunTracker({ onBack }: RunTrackerProps) {
   }, [elapsedTime, setElapsedTime]);
 
   // Wake lock ref to keep screen on during runs
-  const wakeLockRef = useRef<any>(null);
+  const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
 
   const requestWakeLock = async () => {
     try {
-      // @ts-ignore
-      if ((navigator as any).wakeLock?.request) {
-        // @ts-ignore
-        wakeLockRef.current = await (navigator as any).wakeLock.request(
-          "screen",
-        );
+      const nav = navigator as unknown as {
+        wakeLock?: { request: (type: string) => Promise<{ release: () => Promise<void> }> };
+      };
+      if (nav.wakeLock?.request) {
+        wakeLockRef.current = await nav.wakeLock.request("screen");
       }
-    } catch (e) {
-      // ignore
+    } catch {
+      // ignore — wake lock not supported
     }
   };
 
@@ -48,7 +46,7 @@ export function RunTracker({ onBack }: RunTrackerProps) {
         await wakeLockRef.current.release();
         wakeLockRef.current = null;
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   };
@@ -62,23 +60,6 @@ export function RunTracker({ onBack }: RunTrackerProps) {
   const handleStop = async () => {
     stop();
     await releaseWakeLock();
-  };
-
-  const handleResume = () => {
-    resume();
-  };
-
-  const handleFinish = async () => {
-    finish();
-    await releaseWakeLock();
-  };
-
-  const runState = {
-    distance: session.distance,
-    pace: session.pace,
-    elapsedTime,
-    isRunning: session.isRunning,
-    isFinished: session.isFinished,
   };
 
   // Debug overrides (DEV): allow adjusting speed/pace/distance and keep them linked
@@ -148,7 +129,6 @@ export function RunTracker({ onBack }: RunTrackerProps) {
           <CoachMessage
             currentMessage={currentMessage}
             isSpeaking={isSpeaking}
-            messageType={messageType}
           />
         </div>
         {import.meta.env.DEV && (
@@ -176,8 +156,6 @@ export function RunTracker({ onBack }: RunTrackerProps) {
           locations={session.locations}
           onStart={handleStart}
           onStop={handleStop}
-          onResume={handleResume}
-          onFinish={handleFinish}
           coachMessage={currentMessage}
           coachIsSpeaking={isSpeaking}
           coachMessageType={messageType}
@@ -191,11 +169,9 @@ export function RunTracker({ onBack }: RunTrackerProps) {
 function CoachMessage({
   currentMessage,
   isSpeaking,
-  messageType,
 }: {
   currentMessage: string | null;
   isSpeaking: boolean;
-  messageType: any;
 }) {
   if (!currentMessage) return null;
 
@@ -204,7 +180,7 @@ function CoachMessage({
       isHoverable
       className={`bg-neutral-900 border border-white/10 ${
         isSpeaking
-          ? "shadow-[0_0_40px_rgba(30,215,96,0.45)] border-success-500/60"
+          ? "shadow-[0_0_40px_rgba(212,255,0,0.3)] border-[#d4ff00]/30"
           : ""
       }`}
     >
