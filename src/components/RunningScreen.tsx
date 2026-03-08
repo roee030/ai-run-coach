@@ -5,6 +5,7 @@
  */
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RunStats } from "./RunStats";
 import { RunControls } from "./RunControls";
@@ -31,6 +32,8 @@ interface RunningScreenProps {
   coachIsSpeaking?: boolean;
   coachMessageType?: string | null;
   coachDeviation?: number;
+  isCoachSatisfied?: boolean;
+  workoutHud?: ReactNode;
 }
 
 export function RunningScreen({
@@ -53,6 +56,8 @@ export function RunningScreen({
   coachMessageType,
   coachIsSpeaking,
   coachDeviation,
+  isCoachSatisfied,
+  workoutHud,
 }: RunningScreenProps) {
   const [showQuit, setShowQuit] = useState(false);
 
@@ -71,7 +76,7 @@ export function RunningScreen({
     >
       {/* ── Header — always on top ── */}
       <div
-        className="flex items-center justify-between px-4 pt-safe"
+        className="flex items-center px-4"
         style={{
           paddingTop: "max(3rem, env(safe-area-inset-top))",
           paddingBottom: "0.75rem",
@@ -79,6 +84,7 @@ export function RunningScreen({
           zIndex: 50,
         }}
       >
+        {/* Left: back button */}
         <button
           type="button"
           onClick={handleBackClick}
@@ -103,49 +109,80 @@ export function RunningScreen({
           ←
         </button>
 
-        {isRunning && !isPaused && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center gap-2 px-4 py-1.5 rounded-full"
-            style={{
-              background: "color-mix(in srgb, var(--brand-primary) 12%, transparent)",
-              border: "1px solid color-mix(in srgb, var(--brand-primary) 35%, transparent)",
-            }}
-          >
-            <span
-              className="inline-flex h-2 w-2 rounded-full animate-pulse"
-              style={{ background: "var(--brand-primary)" }}
-            />
-            <span
-              className="text-xs font-bold uppercase tracking-widest"
-              style={{ color: "var(--brand-primary)" }}
+        {/* Center: absolutely positioned so it's always truly centred */}
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {isRunning && !isPaused && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+              style={{
+                background: "color-mix(in srgb, var(--brand-primary) 12%, transparent)",
+                border: "1px solid color-mix(in srgb, var(--brand-primary) 35%, transparent)",
+              }}
             >
-              Live
-            </span>
-          </motion.div>
-        )}
+              <span
+                className="inline-flex h-2 w-2 rounded-full animate-pulse"
+                style={{ background: "var(--brand-primary)" }}
+              />
+              <span
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{ color: "var(--brand-primary)" }}
+              >
+                Live
+              </span>
+            </motion.div>
+          )}
 
-        {isPaused && (
-          <div
-            className="flex items-center gap-2 px-4 py-1.5 rounded-full"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-mid)",
-            }}
-          >
-            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
-              Paused
-            </span>
-          </div>
-        )}
+          {isPaused && (
+            <div
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-mid)",
+              }}
+            >
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+                Paused
+              </span>
+            </div>
+          )}
+        </div>
 
-        {/* Spacer so header content stays left-aligned when no indicator */}
-        {!isRunning && !isPaused && <div style={{ width: 44 }} />}
+        {/* Right: Flow badge or fixed-width spacer to keep back button left-anchored */}
+        <div style={{ marginLeft: "auto", width: 44, display: "flex", justifyContent: "flex-end" }}>
+          {isCoachSatisfied && isRunning && !isPaused && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+              style={{
+                background: "color-mix(in srgb, #4ade80 10%, transparent)",
+                border: "1px solid color-mix(in srgb, #4ade80 25%, transparent)",
+                whiteSpace: "nowrap",
+              }}
+              title="Coach is satisfied — you are running perfectly."
+            >
+              <span style={{ fontSize: 13 }}>😌</span>
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "#4ade80" }}>
+                Flow
+              </span>
+            </motion.div>
+          )}
+        </div>
       </div>
 
       {/* ── Scrollable content ── */}
       <div className="flex-1 overflow-y-auto px-4 flex flex-col gap-5 pb-4">
+        {workoutHud}
         {error && (
           <div
             className="px-4 py-3 rounded-xl text-sm font-semibold"
@@ -213,7 +250,7 @@ export function RunningScreen({
             style={{
               position: "fixed",
               inset: 0,
-              zIndex: 100,
+              zIndex: 300,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

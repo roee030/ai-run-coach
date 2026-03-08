@@ -1,0 +1,654 @@
+[
+  {
+    "name": "D — Unknown Journey",
+    "description": "60min flat run, 6:00 target pace, no goal. Verify 6-min flow intervals fire.",
+    "passed": true,
+    "totalSpeaks": 22,
+    "hrWarnings": 0,
+    "conflicts": [],
+    "decisions": [
+      {
+        "timeStr": "00:01",
+        "elapsedS": 1,
+        "decision": "SPEAK",
+        "msgType": "intro",
+        "reason": "Run started — target 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "02:03",
+        "elapsedS": 123,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "06:00",
+        "elapsedS": 360,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "1 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "08:00",
+        "elapsedS": 480,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → grind",
+        "pace": 6
+      },
+      {
+        "timeStr": "10:00",
+        "elapsedS": 600,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "12:00",
+        "elapsedS": 720,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "2 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "16:00",
+        "elapsedS": 960,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "18:00",
+        "elapsedS": 1080,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "3 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "22:00",
+        "elapsedS": 1320,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "24:00",
+        "elapsedS": 1440,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "4 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "28:00",
+        "elapsedS": 1680,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "30:01",
+        "elapsedS": 1801,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "5 km — split 6:01",
+        "pace": 6
+      },
+      {
+        "timeStr": "34:00",
+        "elapsedS": 2040,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "36:01",
+        "elapsedS": 2161,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "6 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "40:00",
+        "elapsedS": 2400,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "42:01",
+        "elapsedS": 2521,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "7 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "45:00",
+        "elapsedS": 2700,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → finish",
+        "pace": 6
+      },
+      {
+        "timeStr": "47:00",
+        "elapsedS": 2820,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "48:01",
+        "elapsedS": 2881,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "8 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "53:00",
+        "elapsedS": 3180,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      },
+      {
+        "timeStr": "54:01",
+        "elapsedS": 3241,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "9 km — split 6:00",
+        "pace": 6
+      },
+      {
+        "timeStr": "59:00",
+        "elapsedS": 3540,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 6
+      }
+    ]
+  },
+  {
+    "name": "E — Cardiovascular Crisis",
+    "description": "HR spikes from 145 to 192 BPM at 5min. Verify P0 hr_warning fires immediately.",
+    "passed": true,
+    "totalSpeaks": 6,
+    "hrWarnings": 2,
+    "conflicts": [],
+    "decisions": [
+      {
+        "timeStr": "00:01",
+        "elapsedS": 1,
+        "decision": "SPEAK",
+        "msgType": "intro",
+        "reason": "Run started — target 5:30",
+        "pace": 5.5
+      },
+      {
+        "timeStr": "02:03",
+        "elapsedS": 123,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 5.5
+      },
+      {
+        "timeStr": "05:01",
+        "elapsedS": 301,
+        "decision": "SPEAK",
+        "msgType": "hr_warning",
+        "reason": "HR critical — 192 BPM",
+        "heartRate": 192,
+        "pace": 5.75
+      },
+      {
+        "timeStr": "05:32",
+        "elapsedS": 332,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "1 km — split 5:32",
+        "pace": 5.75
+      },
+      {
+        "timeStr": "08:00",
+        "elapsedS": 480,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → grind",
+        "pace": 5.75
+      },
+      {
+        "timeStr": "08:02",
+        "elapsedS": 482,
+        "decision": "SPEAK",
+        "msgType": "hr_warning",
+        "reason": "HR critical — 192 BPM",
+        "heartRate": 192,
+        "pace": 5.75
+      }
+    ]
+  },
+  {
+    "name": "F — Hill Struggle",
+    "description": "+6m/min altitude gain, pace −30%. Verify hill waiver suppresses speed-up intervention.",
+    "passed": true,
+    "totalSpeaks": 5,
+    "hrWarnings": 0,
+    "conflicts": [],
+    "decisions": [
+      {
+        "timeStr": "00:01",
+        "elapsedS": 1,
+        "decision": "SPEAK",
+        "msgType": "intro",
+        "reason": "Run started — target 5:00",
+        "pace": 5
+      },
+      {
+        "timeStr": "02:00",
+        "elapsedS": 120,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 30% change: 5.00→6.50",
+        "pace": 6.5
+      },
+      {
+        "timeStr": "05:55",
+        "elapsedS": 355,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "1 km — split 5:55",
+        "pace": 6.5
+      },
+      {
+        "timeStr": "08:00",
+        "elapsedS": 480,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → grind",
+        "pace": 5
+      },
+      {
+        "timeStr": "10:00",
+        "elapsedS": 600,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 5
+      }
+    ]
+  },
+  {
+    "name": "G — Variable but Victorious",
+    "description": "10km goal, alternating 4:00/7:00 pace. Verify 50%/90% milestones and finish chapter.",
+    "passed": true,
+    "totalSpeaks": 36,
+    "hrWarnings": 0,
+    "conflicts": [],
+    "decisions": [
+      {
+        "timeStr": "00:01",
+        "elapsedS": 1,
+        "decision": "SPEAK",
+        "msgType": "intro",
+        "reason": "Run started — target 5:30",
+        "pace": 4
+      },
+      {
+        "timeStr": "03:00",
+        "elapsedS": 180,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "04:46",
+        "elapsedS": 286,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "1 km — split 4:46",
+        "pace": 7
+      },
+      {
+        "timeStr": "04:47",
+        "elapsedS": 287,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → grind",
+        "pace": 7
+      },
+      {
+        "timeStr": "06:00",
+        "elapsedS": 360,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "09:00",
+        "elapsedS": 540,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "09:31",
+        "elapsedS": 571,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "2 km — split 4:45",
+        "pace": 7
+      },
+      {
+        "timeStr": "12:00",
+        "elapsedS": 720,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "14:35",
+        "elapsedS": 875,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "3 km — split 5:04",
+        "pace": 4
+      },
+      {
+        "timeStr": "15:00",
+        "elapsedS": 900,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "18:00",
+        "elapsedS": 1080,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "19:52",
+        "elapsedS": 1192,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "4 km — split 5:17",
+        "pace": 4
+      },
+      {
+        "timeStr": "21:00",
+        "elapsedS": 1260,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "24:00",
+        "elapsedS": 1440,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "25:09",
+        "elapsedS": 1509,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "5 km — split 5:17",
+        "pace": 4
+      },
+      {
+        "timeStr": "25:10",
+        "elapsedS": 1510,
+        "decision": "SPEAK",
+        "msgType": "milestone",
+        "reason": "50% of goal reached",
+        "pace": 4
+      },
+      {
+        "timeStr": "27:00",
+        "elapsedS": 1620,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "30:00",
+        "elapsedS": 1800,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "30:26",
+        "elapsedS": 1826,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "6 km — split 5:17",
+        "pace": 4
+      },
+      {
+        "timeStr": "33:00",
+        "elapsedS": 1980,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "35:31",
+        "elapsedS": 2131,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "7 km — split 5:05",
+        "pace": 7
+      },
+      {
+        "timeStr": "36:00",
+        "elapsedS": 2160,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "39:00",
+        "elapsedS": 2340,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "40:16",
+        "elapsedS": 2416,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "8 km — split 4:45",
+        "pace": 7
+      },
+      {
+        "timeStr": "42:00",
+        "elapsedS": 2520,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "45:00",
+        "elapsedS": 2700,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "45:01",
+        "elapsedS": 2701,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "9 km — split 4:45",
+        "pace": 7
+      },
+      {
+        "timeStr": "45:02",
+        "elapsedS": 2702,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → finish",
+        "pace": 7
+      },
+      {
+        "timeStr": "45:03",
+        "elapsedS": 2703,
+        "decision": "SPEAK",
+        "msgType": "milestone",
+        "reason": "90% of goal reached",
+        "pace": 7
+      },
+      {
+        "timeStr": "48:00",
+        "elapsedS": 2880,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "50:18",
+        "elapsedS": 3018,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "10 km — split 5:17",
+        "pace": 4
+      },
+      {
+        "timeStr": "51:00",
+        "elapsedS": 3060,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "54:00",
+        "elapsedS": 3240,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      },
+      {
+        "timeStr": "55:35",
+        "elapsedS": 3335,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "11 km — split 5:17",
+        "pace": 4
+      },
+      {
+        "timeStr": "57:00",
+        "elapsedS": 3420,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 75% change: 4.00→7.00",
+        "pace": 7
+      },
+      {
+        "timeStr": "60:00",
+        "elapsedS": 3600,
+        "decision": "SPEAK",
+        "msgType": "sudden_surge",
+        "reason": "Sudden 43% change: 7.00→4.00",
+        "pace": 4
+      }
+    ]
+  },
+  {
+    "name": "H — Broken Sensor",
+    "description": "Pace spikes 5:00→2:00→12:00 in 2 ticks. Verify sustain threshold blocks, sudden-change fires.",
+    "passed": true,
+    "totalSpeaks": 6,
+    "hrWarnings": 0,
+    "conflicts": [],
+    "decisions": [
+      {
+        "timeStr": "00:01",
+        "elapsedS": 1,
+        "decision": "SPEAK",
+        "msgType": "intro",
+        "reason": "Run started — target 5:00",
+        "pace": 5
+      },
+      {
+        "timeStr": "02:03",
+        "elapsedS": 123,
+        "decision": "SPEAK",
+        "msgType": "flow_checkin",
+        "reason": "Positive flow check-in",
+        "pace": 5
+      },
+      {
+        "timeStr": "05:00",
+        "elapsedS": 300,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "1 km — split 5:00",
+        "pace": 2
+      },
+      {
+        "timeStr": "05:01",
+        "elapsedS": 301,
+        "decision": "SPEAK",
+        "msgType": "sudden_drop",
+        "reason": "Sudden 500% change: 2.00→12.00",
+        "pace": 12
+      },
+      {
+        "timeStr": "08:00",
+        "elapsedS": 480,
+        "decision": "SPEAK",
+        "msgType": "chapter",
+        "reason": "Chapter → grind",
+        "pace": 5
+      },
+      {
+        "timeStr": "10:00",
+        "elapsedS": 600,
+        "decision": "SPEAK",
+        "msgType": "km",
+        "reason": "2 km — split 5:00",
+        "pace": 5
+      }
+    ]
+  }
+]

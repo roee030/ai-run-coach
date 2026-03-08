@@ -315,6 +315,18 @@ export function useRunTracker() {
   }, []);
 
   /**
+   * Pause running session — stops sensor and scheduler without clearing distance.
+   * isRunning stays true so the app knows the session is still active (just paused).
+   */
+  const pause = useCallback(() => {
+    if (sensorRef.current) {
+      sensorRef.current.stop();
+      sensorRef.current = null;
+    }
+    metricsSchedulerRef.current.stop();
+  }, []);
+
+  /**
    * End session and show results
    */
   const finish = useCallback(() => {
@@ -362,6 +374,7 @@ export function useRunTracker() {
   return {
     session,
     start,
+    pause,
     stop,
     resume,
     finish,

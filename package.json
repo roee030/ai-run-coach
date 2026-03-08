@@ -11,7 +11,9 @@
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test:coach": "vitest run src/coaching/coachingSimulator.test.ts",
+    "test:coach:json": "vitest run src/coaching/coachingSimulator.test.ts --reporter=json --outputFile=coach-test-results.vitest.json"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

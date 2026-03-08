@@ -5,4 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/ai-run-coach/',
+  test: {
+    environment: 'node',          // pure TS — no browser APIs needed
+    include: ['src/**/*.test.ts'],
+    reporters: ['verbose'],
+  },
 })

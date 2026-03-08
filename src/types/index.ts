@@ -2,6 +2,10 @@
  * Core types for the run tracking application
  */
 
+export type { SavedRun } from "./run";
+export type { UserProfile } from "./user";
+export { DEFAULT_USER_PROFILE } from "./user";
+
 export interface LocationPoint {
   latitude: number;
   longitude: number;

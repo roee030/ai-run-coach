@@ -34,8 +34,8 @@ function getRunMode(): "real" | "simulation" {
     return envMode;
   }
 
-  // Default
-  return "real";
+  // Default: simulation in DEV (no real GPS on desktop), real in production
+  return import.meta.env.DEV ? "simulation" : "real";
 }
 
 /**

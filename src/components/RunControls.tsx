@@ -6,6 +6,7 @@
  */
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface RunControlsProps {
@@ -79,46 +80,56 @@ export function RunControls({
         )}
       </motion.div>
 
-      {/* ── Finish Run? confirmation modal ── */}
-      <AnimatePresence>
-        {showFinish && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-6"
-            style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)" }}
-          >
+      {/* ── Finish Run? confirmation modal — portalled to body to escape motion transforms ── */}
+      {createPortal(
+        <AnimatePresence>
+          {showFinish && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: "fixed", inset: 0, zIndex: 9000,
+                display: "flex", alignItems: "center", justifyContent: "center", padding: "0 24px",
+                background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)",
+              }}
+            >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="glass-card p-8 w-full max-w-sm flex flex-col items-center gap-6 text-center"
+              style={{
+                background: "#111",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 20,
+                padding: "2rem 1.5rem",
+                width: "100%",
+                maxWidth: 360,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "1.5rem",
+                textAlign: "center",
+              }}
             >
               <div>
-                <h2
-                  className="brand-title text-3xl"
-                  style={{ color: "var(--text-bold)" }}
-                >
+                <h2 style={{ color: "#fff", fontSize: "1.6rem", fontWeight: 900, fontFamily: "'Oswald', Inter, system-ui, sans-serif", margin: 0 }}>
                   Finish Run?
                 </h2>
-                <p className="text-sm mt-2" style={{ color: "var(--text-muted)" }}>
-                  Your run will be saved and summarised.
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginTop: 8, marginBottom: 0 }}>
+                  Your run will be saved and summarized.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 w-full">
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%" }}>
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowFinish(false);
-                    onStop();
-                  }}
+                  onClick={() => { setShowFinish(false); onStop(); }}
                   style={{
                     padding: "0.9rem",
                     borderRadius: "9999px",
-                    background: "var(--brand-primary)",
-                    color: "var(--brand-fg)",
+                    background: "#d4ff00",
+                    color: "#000",
                     fontWeight: 900,
                     fontSize: "0.85rem",
                     letterSpacing: "0.08em",
@@ -137,12 +148,12 @@ export function RunControls({
                     padding: "0.9rem",
                     borderRadius: "9999px",
                     background: "transparent",
-                    color: "var(--text-secondary)",
+                    color: "rgba(255,255,255,0.6)",
                     fontWeight: 700,
                     fontSize: "0.85rem",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    border: "2px solid var(--border-mid)",
+                    border: "2px solid rgba(255,255,255,0.2)",
                     cursor: "pointer",
                   }}
                 >
@@ -151,8 +162,10 @@ export function RunControls({
               </div>
             </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </>
   );
 }
